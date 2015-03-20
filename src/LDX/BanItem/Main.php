@@ -21,9 +21,26 @@ class Main extends PluginBase implements Listener {
     $this->getServer()->getPluginManager()->registerEvents($this,$this);
   }
 
+  public function getPlayerPosition(Player $sender) {
+   
+					$playerX = $sender->getX();
+                	$playerY = $sender->getY();
+                	$playerZ = $sender->getZ();
+
+                	$outX=round($playerX,1);
+                	$outY=round($playerY,1);
+                	$outZ=round($playerZ,1);
+
+                	$playerLevel = $sender->getLevel()->getName();
+
+                	return ("x:" . $outX . ", y:" . $outY . ", z:" . $outZ . ". On: " . $playerLevel);
+	}
+	
+	
   public function onTouch(PlayerInteractEvent $event) {
     $p = $event->getPlayer();
     if($this->isBanned($event->getItem())) {
+          $this->getLogger()->info($p->getNameTag()." tried a Banned Item: ".$event->getItem()." at ".$this->getPlayerPosition($p));
       if(!($p->hasPermission("banitem") || $p->hasPermission("banitem.*") || $p->hasPermission("banitem.bypass"))) {
         $p->sendMessage("[BanItem] That item is banned.");
         $event->setCancelled();
@@ -34,8 +51,8 @@ class Main extends PluginBase implements Listener {
   public function onBlockPlace(BlockPlaceEvent $event) {
     $p = $event->getPlayer();
     if($this->isBanned($event->getItem())) {
+          $this->getLogger()->info($p->getNameTag()." tried a Banned Item: ".$event->getItem()." at ".$this->getPlayerPosition($p));
       if(!($p->hasPermission("banitem") || $p->hasPermission("banitem.*") || $p->hasPermission("banitem.bypass"))) {
-        $p->sendMessage("[BanItem] That item is banned.");
         $event->setCancelled();
       }
     }
@@ -45,6 +62,7 @@ class Main extends PluginBase implements Listener {
     if($event instanceof EntityDamageByEntityEvent && $event->getDamager() instanceof Player) {
       $p = $event->getDamager();
       if($this->isBanned($p->getInventory()->getItemInHand())) {
+          $this->getLogger()->info($p->getNameTag()." tried a Banned Item: ".$event->getItem()." at ".$this->getPlayerPosition($p));
         if(!($p->hasPermission("banitem") || $p->hasPermission("banitem.*") || $p->hasPermission("banitem.bypass"))) {
           $p->sendMessage("[BanItem] That item is banned.");
           $event->setCancelled();
@@ -56,6 +74,7 @@ class Main extends PluginBase implements Listener {
   public function onEat(PlayerItemConsumeEvent $event) {
     $p = $event->getPlayer();
     if($this->isBanned($event->getItem())) {
+          $this->getLogger()->info($p->getNameTag()." tried a Banned Item: ".$event->getItem()." at ".$this->getPlayerPosition($p));
       if(!($p->hasPermission("banitem") || $p->hasPermission("banitem.*") || $p->hasPermission("banitem.bypass"))) {
         $p->sendMessage("[BanItem] That item is banned.");
         $event->setCancelled();
@@ -67,6 +86,7 @@ class Main extends PluginBase implements Listener {
     if($event->getEntity() instanceof Player) {
       $p = $event->getEntity();
       if($this->isBanned($event->getBow())) {
+          $this->getLogger()->info($p->getNameTag()." tried a Banned Item: ".$event->getItem()." at ".$this->getPlayerPosition($p));
         if(!($p->hasPermission("banitem") || $p->hasPermission("banitem.*") || $p->hasPermission("banitem.bypass"))) {
           $p->sendMessage("[BanItem] That item is banned.");
           $event->setCancelled();
@@ -107,6 +127,7 @@ class Main extends PluginBase implements Listener {
         array_splice($this->items,array_search($i,$this->items),1);
         $this->saveItems();
         $p->sendMessage("[BanItem] The item " . str_replace("#",":",$i) . " has been unbanned.");
+        $this->getLogger()->info($p->getNameTag()." UnBanned Item: ".str_replace("#",":",$i));
       }
     } else {
       return false;
@@ -120,7 +141,8 @@ class Main extends PluginBase implements Listener {
     }
     return false;
   }
-
+                	
+                	
   public function saveItems() {
     if(!isset($this->items)) {
       if(!file_exists($this->getDataFolder() . "items.bin")) {
