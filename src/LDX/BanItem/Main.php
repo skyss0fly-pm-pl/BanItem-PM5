@@ -23,7 +23,7 @@ class Main extends PluginBase implements Listener {
 
   public function getPlayerPosition(Player $sender) {
    
-					$playerX = $sender->getX();
+			$playerX = $sender->getX();
                 	$playerY = $sender->getY();
                 	$playerZ = $sender->getZ();
 
