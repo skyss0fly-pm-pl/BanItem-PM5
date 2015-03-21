@@ -62,7 +62,6 @@ class Main extends PluginBase implements Listener {
     if($event instanceof EntityDamageByEntityEvent && $event->getDamager() instanceof Player) {
       $p = $event->getDamager();
       if($this->isBanned($p->getInventory()->getItemInHand())) {
-          $this->getLogger()->info($p->getNameTag()." tried a Banned Item: ".$event->getItem()." at ".$this->getPlayerPosition($p));
         if(!($p->hasPermission("banitem") || $p->hasPermission("banitem.*") || $p->hasPermission("banitem.bypass"))) {
           $p->sendMessage("[BanItem] That item is banned.");
           $event->setCancelled();
