@@ -1,0 +1,7 @@
+---
+branches: master
+projects:
+  BanItem:
+    path: ""
+    model: default
+...
