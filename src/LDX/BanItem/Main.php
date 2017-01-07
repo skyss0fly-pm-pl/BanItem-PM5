@@ -21,10 +21,27 @@ class Main extends PluginBase implements Listener {
     $this->getServer()->getPluginManager()->registerEvents($this,$this);
   }
 
+  public function getPlayerPosition(Player $sender) {
+   
+					$playerX = $sender->getX();
+                	$playerY = $sender->getY();
+                	$playerZ = $sender->getZ();
+
+                	$outX=round($playerX,1);
+                	$outY=round($playerY,1);
+                	$outZ=round($playerZ,1);
+
+                	$playerLevel = $sender->getLevel()->getName();
+
+                	return ("x:" . $outX . ", y:" . $outY . ", z:" . $outZ . ". On: " . $playerLevel);
+	}
+	
+	
   public function onTouch(PlayerInteractEvent $event) {
     $p = $event->getPlayer();
     if($this->isBanned($event->getItem())) {
-      if(!($p->hasPermission("banitem") || $p->hasPermission("banitem.bypass"))) {
+          $this->getLogger()->info($p->getName()." tried a Banned Item: ".$event->getItem()." at ".$this->getPlayerPosition($p));
+      if(!($p->hasPermission("banitem") || $p->hasPermission("banitem.*") || $p->hasPermission("banitem.bypass"))) {
         $p->sendMessage("[BanItem] That item is banned.");
         $event->setCancelled();
       }
@@ -34,8 +51,8 @@ class Main extends PluginBase implements Listener {
   public function onBlockPlace(BlockPlaceEvent $event) {
     $p = $event->getPlayer();
     if($this->isBanned($event->getItem())) {
-      if(!($p->hasPermission("banitem") || $p->hasPermission("banitem.bypass"))) {
-        $p->sendMessage("[BanItem] That item is banned.");
+          $this->getLogger()->info($p->getName()." tried a Banned Item: ".$event->getItem()." at ".$this->getPlayerPosition($p));
+      if(!($p->hasPermission("banitem") || $p->hasPermission("banitem.*") || $p->hasPermission("banitem.bypass"))) {
         $event->setCancelled();
       }
     }
@@ -45,7 +62,7 @@ class Main extends PluginBase implements Listener {
     if($event instanceof EntityDamageByEntityEvent && $event->getDamager() instanceof Player) {
       $p = $event->getDamager();
       if($this->isBanned($p->getInventory()->getItemInHand())) {
-        if(!($p->hasPermission("banitem") || $p->hasPermission("banitem.bypass"))) {
+        if(!($p->hasPermission("banitem") || $p->hasPermission("banitem.*") || $p->hasPermission("banitem.bypass"))) {
           $p->sendMessage("[BanItem] That item is banned.");
           $event->setCancelled();
         }
@@ -56,7 +73,8 @@ class Main extends PluginBase implements Listener {
   public function onEat(PlayerItemConsumeEvent $event) {
     $p = $event->getPlayer();
     if($this->isBanned($event->getItem())) {
-      if(!($p->hasPermission("banitem") || $p->hasPermission("banitem.bypass"))) {
+          $this->getLogger()->info($p->getName()." tried a Banned Item: ".$event->getItem()." at ".$this->getPlayerPosition($p));
+      if(!($p->hasPermission("banitem") || $p->hasPermission("banitem.*") || $p->hasPermission("banitem.bypass"))) {
         $p->sendMessage("[BanItem] That item is banned.");
         $event->setCancelled();
       }
@@ -67,7 +85,8 @@ class Main extends PluginBase implements Listener {
     if($event->getEntity() instanceof Player) {
       $p = $event->getEntity();
       if($this->isBanned($event->getBow())) {
-        if(!($p->hasPermission("banitem") || $p->hasPermission("banitem.bypass"))) {
+          $this->getLogger()->info($p->getName()." tried a Banned Item: ".$event->getItem()." at ".$this->getPlayerPosition($p));
+        if(!($p->hasPermission("banitem") || $p->hasPermission("banitem.*") || $p->hasPermission("banitem.bypass"))) {
           $p->sendMessage("[BanItem] That item is banned.");
           $event->setCancelled();
         }
@@ -76,45 +95,39 @@ class Main extends PluginBase implements Listener {
   }
 
   public function onCommand(CommandSender $p,Command $cmd,$label,array $args) {
-    if(!isset($args[0])) {
+    if(!isset($args[0]) || !isset($args[1])) {
       return false;
     }
-    if(strtolower($args[0]) == "ban" || strtolower($args[0]) == "unban") {
-      if(!isset($args[1])) {
-        return false;
-      }
-      $item = explode(":",$args[1]);
-      if(!is_numeric($item[0]) || (isset($item[1]) && !is_numeric($item[1]))) {
-        $p->sendMessage("[BanItem] §cPlease only use an item's ID value, and damage if needed.");
-        return true;
-      }
+    $item = explode(":",$args[1]);
+    if(!is_numeric($item[0]) || (isset($item[1]) && !is_numeric($item[1]))) {
+      $p->sendMessage("[BanItem] Please only use an item's ID value, and damage if needed.");
+      return true;
     }
-    if(strtolower($args[0]) == "ban") {
+    if($args[0] == "ban") {
       $i = $item[0];
       if(isset($item[1])) {
         $i = $i . "#" . $item[1];
       }
       if(in_array($i,$this->items)) {
-        $p->sendMessage("[BanItem] §cThat item is already banned.");
+        $p->sendMessage("[BanItem] That item is already banned.");
       } else {
         array_push($this->items,$i);
         $this->saveItems();
-        $p->sendMessage("[BanItem] §aThe item " . str_replace("#",":",$i) . " has been banned.");
+        $p->sendMessage("[BanItem] The item " . str_replace("#",":",$i) . " has been banned.");
       }
-    } else if(strtolower($args[0]) == "unban") {
+    } else if($args[0] == "unban") {
       $i = $item[0];
       if(isset($item[1])) {
         $i = $i . "#" . $item[1];
       }
       if(!in_array($i,$this->items)) {
-        $p->sendMessage("[BanItem] §cThat item wasn't banned.");
+        $p->sendMessage("[BanItem] That item wasn't banned.");
       } else {
         array_splice($this->items,array_search($i,$this->items),1);
         $this->saveItems();
-        $p->sendMessage("[BanItem] §aThe item " . str_replace("#",":",$i) . " has been unbanned.");
+        $p->sendMessage("[BanItem] The item " . str_replace("#",":",$i) . " has been unbanned.");
+        $this->getLogger()->info($p->getName()." UnBanned Item: ".str_replace("#",":",$i));
       }
-    } else if(strtolower($args[0]) == "list") {
-      $p->sendMessage("[BanItem] §eBanned item" . (count($this->items) == 1 ? "" : "s") . ": §f" . str_replace("#", ":", implode(", ", $this->items)) . (count($this->items) > 0 ? "." : "§7None."));
     } else {
       return false;
     }
@@ -127,7 +140,8 @@ class Main extends PluginBase implements Listener {
     }
     return false;
   }
-
+                	
+                	
   public function saveItems() {
     if(!isset($this->items)) {
       if(!file_exists($this->getDataFolder() . "items.bin")) {
@@ -141,4 +155,3 @@ class Main extends PluginBase implements Listener {
   }
 
 }
-?>
