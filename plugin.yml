@@ -1,7 +1,7 @@
 name: BanItem
 author: LDX
-version: 2.2_AWZ
-api: [1.0.0, 2.0.0, 3.0.0-ALPHA1]
+version: 2.3
+api: [2.0.0, 3.0.0-ALPHA1, 3.0.0-ALPHA2, 3.0.0-ALPHA3, 3.0.0-ALPHA4]
 main: LDX\BanItem\Main
 load: POSTWORLD
 website: https://github.com/LDX-MCPE/BanItem
@@ -9,17 +9,17 @@ commands:
   banitem:
     description: "BanItem main command."
     permission: banitem.command.banitem
-    usage: "/banitem <ban/unban/list> [ID[:Damage]]"
+    usage: "/banitem <ban/unban/list/report> [ID[:Damage]]"
 permissions:
   banitem:
-    default: false
+    default: op
     description: "Allows access to all BanItem features."
     children:
       banitem.bypass:
-        default: false
+        default: op
         description: "Allows access to using banned items."
       banitem.command:
-        default: false
+        default: op
         description: "Allows access to all BanItem commands."
         children:
           banitem.command.banitem:
