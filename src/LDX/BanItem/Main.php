@@ -124,7 +124,7 @@ class Main extends PluginBase implements Listener {
         }
     }
 
-    public function onCommand(CommandSender $p, Command $cmd, $label, array $args) {
+    public function onCommand(CommandSender $p, Command $cmd, string $label, array $args) : bool{
         if(!isset($args[0])) {
             return false;
         }
