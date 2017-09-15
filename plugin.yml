@@ -1,7 +1,7 @@
 name: BanItem
 author: LDX
-version: 2.3.2-dev
-api: [3.0.0-ALPHA7]
+version: 2.3.2-1.alpha8
+api: [3.0.0-ALPHA7, 3.0.0-ALPHA8]
 main: LDX\BanItem\Main
 load: POSTWORLD
 website: https://github.com/LDX-MCPE/BanItem
