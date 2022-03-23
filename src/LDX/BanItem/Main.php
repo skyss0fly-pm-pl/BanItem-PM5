@@ -21,6 +21,8 @@ use pocketmine\utils\TextFormat as TEXTFORMAT;
 
 class Main extends PluginBase implements Listener {
 
+    private $item;
+
     private $spys = [];
 
     public function onEnable(): void {
@@ -98,7 +100,7 @@ class Main extends PluginBase implements Listener {
             if($this->isBanned($p->getInventory()->getItemInHand())) {
                 foreach($this->getServer()->getOnlinePlayers() as $player) {
                     if(isset($this->spys[strtolower($player->getName())])) {
-                        $player->sendMessage($p->getName() . " tried a Banned Item: " . $event->getItem());
+                        $player->sendMessage($p->getName() . " tried a Banned Item: " . $p->getInventory()->getItemInHand());
                     }
                 }
                 if(!($p->hasPermission("banitem") || $p->hasPermission("banitem.*") || $p->hasPermission("banitem.bypass"))) {
@@ -133,10 +135,10 @@ class Main extends PluginBase implements Listener {
             if($this->isBanned($event->getBow())) {
                 foreach($this->getServer()->getOnlinePlayers() as $player) {
                     if(isset($this->spys[strtolower($player->getName())])) {
-                        $player->sendMessage($p->getName() . " tried a Banned Item: " . $event->getItem());
+                        $player->sendMessage($p->getName() . " tried a Banned Item: " . $event->getBow());
                     }
                 }
-                $this->getLogger()->info($p->getName() . " tried a Banned Item: " . $event->getItem() . " at " . $this->getPlayerPosition($p));
+                $this->getLogger()->info($p->getName() . " tried a Banned Item: " . $event->getBow() . " at " . $this->getPlayerPosition($p));
                 if(!($p->hasPermission("banitem") || $p->hasPermission("banitem.*") || $p->hasPermission("banitem.bypass"))) {
                     $p->sendMessage("[BanItem] That item is banned.");
                     $event->cancel();
