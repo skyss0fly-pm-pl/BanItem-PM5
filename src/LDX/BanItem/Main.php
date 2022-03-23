@@ -210,12 +210,8 @@ class Main extends PluginBase implements Listener {
 
     public function isBanned($i)
     {
-        if ($i instanceof Tool || $i instanceof Armor){
+        if ($i instanceof Tool || $i instanceof Armor || $i instanceof Sword){
             if (in_array(strval($i->getID()), $this->items, true) || in_array(($i->getID() . "#" . $i->getDamage()), $this->items, true)) {
-                return true;
-            }
-        } elseif ($i instanceof Sword){
-            if (in_array(strval($i->getID()), $this->items, false) || in_array(($i->getID() . "#" . $i->getDamage()), $this->items, false)) {
                 return true;
             }
         } else{
