@@ -21,7 +21,7 @@ use pocketmine\utils\TextFormat as TEXTFORMAT;
 
 class Main extends PluginBase implements Listener {
 
-    private $item;
+    private $items;
 
     private $spys = [];
 
