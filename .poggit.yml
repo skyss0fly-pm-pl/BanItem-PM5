@@ -1,8 +1,0 @@
----
-branches: master
-projects:
-  BanItem:
-    path: ""
-    model: default
-    icon: banitem.png
-...
