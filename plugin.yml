@@ -1,6 +1,6 @@
 name: BanItem
 author: LDX
-version: 2.3.3
+version: 2.3.4
 api: 4.0.0
 main: LDX\BanItem\Main
 load: POSTWORLD
