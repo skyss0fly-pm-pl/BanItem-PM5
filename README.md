@@ -1,6 +1,7 @@
 ### General
 
 [![Poggit Release](https://poggit.pmmp.io/shield.approved/BanItem-PM4)](https://poggit.pmmp.io/p/BanItem-PM4)
+[![Discord](https://img.shields.io/discord/1100650029573738508.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/yAhsgskaGy)
 
 BanItem is a PocketMine plugin designed to ban items on a server-wide basis.
 
